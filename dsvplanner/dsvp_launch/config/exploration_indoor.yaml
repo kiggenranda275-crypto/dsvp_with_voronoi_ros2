@@ -1,0 +1,145 @@
+/exploration:
+  ros__parameters:
+    #Interface Constants
+    interface/dtime: 1.0
+    interface/initX: 4.0
+    interface/initY: 0.0
+    interface/initZ: 0.0
+    interface/initTime: 4.0
+    interface/returnHomeThres: 1.5
+    interface/robotMovingThres: 10.0
+    interface/autoExp: true
+    interface/replay: false
+    interface/tfFrame: map
+    interface/waypointTopic: /way_point
+    interface/cmdVelTopic: /cmd_vel
+    interface/graphPlannerCommandTopic: /graph_planner_command
+    interface/effectivePlanTimeTopic: /runtime
+    interface/totalPlanTimeTopic: /totaltime
+    interface/gpStatusTopic: /graph_planner_status
+    interface/odomTopic: /state_estimation
+    interface/beginSignalTopic: /start_exploring
+    interface/stopSignalTopic: /stop_exploring
+
+/dsvplanner:
+  ros__parameters:
+    #Dynamic RRT Constants
+    drrt/gain/kFree: -1.0
+    drrt/gain/kOccupied: 0.0
+    drrt/gain/kUnknown: 2.0
+    drrt/gain/kMinEffectiveGain: 10
+    drrt/gain/kRange: 5.0
+    drrt/gain/kRangeZMinus: 0.4
+    drrt/gain/kRangeZPlus: 0.4
+    drrt/gain/kZero: 0.0
+    drrt/gain/kFrontier: 3.0
+    
+    drrt/tree/kExtensionRange: 0.8
+    drrt/tree/kMinExtensionRange: 0.5
+    drrt/tree/kMaxExtensionAlongZ: 0.5
+    drrt/tree/kExactRoot: false
+    drrt/tree/kGlobalExtraIterations_: 300
+    drrt/tree/kCuttoffIterations: 200
+    drrt/tree/kRemainingNodeScaleSize: 0.4
+    drrt/tree/kRemainingBranchScaleSize: 0.08
+    drrt/tree/kNewNodeScaleSize: 0.4
+    drrt/tree/kNewBranchScaleSize: 0.08
+    drrt/vertexSize: 120
+    drrt/keepTryingNum: 3
+    drrt/kLoopCountThres: 1500
+    drrt/tfFrame: map
+
+    #Planner Topics
+    planner/odomSubTopic: /state_estimation
+    planner/boundarySubTopic: /navigation_boundary
+    planner/terrainCloudSubTopic: /terrain_map_ext
+    planner/newTreePathPubTopic: /new_tree_path
+    planner/remainingTreePathPubTopic: /remaining_tree_path
+    planner/boundaryPubTopic: /planning_horizon
+    planner/globalSelectedFrontierPubTopic: /globalSelectedfrontier
+    planner/localSelectedFrontierPubTopic: /threefrontier
+    planner/plantimePubTopic: /plan_time
+    planner/nextGoalPubTopic: /next_goal
+    planner/randomSampledPointsPubTopic: /sampledPoints
+    planner/shutDownTopic: /stop_exploring
+    planner/plannerServiceName: /drrtPlannerSrv
+    planner/cleanFrontierServiceName: /cleanFrontierSrv
+
+
+    # Exploration Boundary (local boundary and global boundary) 
+    lb/kMinXLocal: -15.0
+    lb/kMinYLocal: -15.0
+    lb/kMinZLocal: -5.0
+    lb/kMaxXLocal: 15.0
+    lb/kMaxYLocal: 15.0
+    lb/kMaxZLocal: 5.0
+
+    gb/kMinXGlobal: -300.0
+    gb/kMinYGlobal: -300.0
+    gb/kMinZGlobal: -30.0
+    gb/kMaxXGlobal: 300.0
+    gb/kMaxYGlobal: 300.0
+    gb/kMaxZGlobal: 25.0
+
+    # Robot Model (including robot bounding box and sensor model)
+    rm/kSensorPitch: 0.0
+    rm/kSensorHorizontal: 360.0
+    rm/kSensorVertical: 30.0
+    rm/kBoundX: 0.2
+    rm/kBoundY: 0.2
+    rm/kBoundZ: 0.2
+    rm/kVehicleHeight: 0.75
+
+    #Terrain Elevation Constants 地形体素分析
+    elevation/kTerrainVoxelHalfWidth: 50
+    elevation/kTerrainVoxelWidth: 101
+    elevation/kTerrainVoxelSize: 0.2
+
+    # Graph Constants
+    graph/world_frame_id                          : map
+    graph/pub_local_graph_topic                   : /local_graph
+    graph/pub_global_graph_topic                  : /global_graph
+    graph/pub_global_points_topic                 : /global_points
+    graph/sub_keypose_topic                       : /state_estimation
+    graph/sub_path_topic                          : /graph_planner_path
+    graph/sub_graph_planner_status_topic          : /graph_planner_status
+
+    graph/kCropPathWithTerrain                    : true
+    graph/kConnectVertexDistMax                   : 5.0 # 最大连接顶点距离
+    graph/kDegressiveCoeff                        : 0.3 # 递减系数
+    graph/kDirectionCoeff                         : 0.2 # 方向系数
+    graph/kDistBadEdge                            : 5.0 # 超过此距离的边将被惩罚
+    graph/kExistingPathRatioThreshold             : 1.0 # 如果现有路径与边的比例超过此值，则添加边
+    graph/kExistingPathRatioThresholdGlobal       : 1.2 # 如果现有路径与边的比例超过此值，则将边添加到全局图
+    graph/kLongEdgePenaltyMultiplier              : 5.0 # 如果边较长，边的成本将乘以此值
+    graph/kMaxLongEdgeDist                        : 6.0 # 绝对最大值，不允许有比此值更长的边（即使标记为坏边）
+    graph/kMaxVertexAngleAlongZ                   : 38.0 # 沿 Z 轴添加边时两个顶点之间的最大角度
+    graph/kMaxVertexDiffAlongZ                    : 1.0 # 添加边时两个顶点沿 Z 轴的最大距离      /**************************重要参数
+    graph/kMaxDistToPrunedRoot                    : 10.0 # 修剪局部图时根节点与最近顶点之间的最大距离
+    graph/kMaxPrunedNodeDist                      : 15.0 # 修剪局部图时根节点与新节点之间的最大距离
+    graph/kMinVertexDist                          : 0.6 # 如果关键点距离现有顶点至少此距离，则创建新顶点
+    graph/kSurroundRange                          : 4.0 # 计算周围节点的范围
+    graph/kMinGainRange                           : 3.0 # 计算增益的最小范围。在此范围内的顶点没有增益
+    graph/kMinDistanceToRobotToCheck              : 4.0 # 检查边的碰撞状态时顶点与机器人的最小距离
+    #Frontier Constants
+    frontier/world_frame_id: map
+    frontier/robot_frame_id: sensor
+    frontier/sub_graph_points_topic: /global_points
+    frontier/pub_unknown_points_topic: /octomap_unknown
+    frontier/pub_global_frontier_points_topic: /global_frontier
+    frontier/pub_local_frontier_points_topic: /local_frontier
+
+    frontier/kExecuteFrequency: 10.0
+    frontier/kFrontierResolution: 0.2 
+    frontier/kFrontierFilterSize: 1.0
+    frontier/kSearchRadius: 12.0
+    frontier/kSearchBoundingX: 42.0
+    frontier/kSearchBoundingY: 42.0
+    frontier/kSearchBoundingZ: 0.5
+    frontier/kEffectiveUnknownNumAroundFrontier: 1
+    frontier/kFrontierNeighbourSearchRadius: 5.0
+    frontier/kEliminateFrontiersAroundRobots: false
+
+    voronoi/max_z: 1.0
+    voronoi/min_z: -0.5
+    voronoi/voronoi_unknown_num: 3
